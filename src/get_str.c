@@ -18,93 +18,108 @@ char *get_new_str() {
     char *input_str = get_string_from_input();
     char *new_str = (char*) calloc(LIMIT_SIZE, sizeof(char));
     int i = 0; int j = 0;
-    bool unar_minus;
+
     while (i < strlen(input_str))
     {
-        unar_minus = false;
         new_str[j++] = input_str[i];
-        if (input_str[i] == '-')
-            if ((i == 0)
-            || (strchr(keys, input_str[i-1]))
-            || ((input_str[i-1] == ' ') && strchr(keys, input_str[i-2])))
-                unar_minus = true;
-
         if (strchr(keys,input_str[i+1]) || strchr(keys,input_str[i]))
-            if (!unar_minus)
-                new_str[j++] = ' ';
+            new_str[j++] = ' ';
         i++;
     }
     free(input_str);
     return new_str;
 }
 
-void pop_operation_to_string(char *oper, char *str, Stack *stack) {
-    strcat(str, oper);
-    pop_from_stack(stack);
-    strcat(str, " ");
-}
-
 void print_operations(stack_type oper, char *str, Stack *stack)
 {
-    switch ((int) oper)
+    int a = (int)oper;
+    switch (a)
     {
         case O_BRACKET:
         case C_BRACKET:
+        {
             pop_from_stack(stack);
+        }
             break;
         case SUM:
-            pop_operation_to_string("+", str, stack);
+        {
+            strcat(str, "+");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case SUBSTRACT:
-            pop_operation_to_string("-", str, stack);
+        {
+            strcat(str, "-");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case MULTIPLY:
-            pop_operation_to_string("*", str, stack);
+        {
+            strcat(str, "*");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case DIVISION:
-            pop_operation_to_string("/", str, stack);
+        {
+            strcat(str, "/");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case POWER:
-            pop_operation_to_string("^", str, stack);
+        {
+            strcat(str, "^");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case SIN:
-            pop_operation_to_string("sin", str, stack);
+        {
+            strcat(str, "sin");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case COS:
-            pop_operation_to_string("cos", str, stack);
+        {
+            strcat(str, "cos");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case LOG:
-            pop_operation_to_string("log", str, stack);
+        {
+            strcat(str, "log");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         case SQRT:
-            pop_operation_to_string("sqrt", str, stack);
+        {
+            strcat(str, "sqrt");
+            pop_from_stack(stack);
+            strcat(str, " ");
             break;
+        }
         default:
             break;
     }
 }
 
-int priority(stack_type oper)
+int priority(int oper)
 {
-    switch ((int) oper) {
-        case O_BRACKET:
-        case C_BRACKET:
-            return 5;
-        case SUM:
-        case SUBSTRACT:
-            return 1;
-        case MULTIPLY:
-        case DIVISION:
-        case SIN:
-        case COS:
-        case LOG:
-        case SQRT:
-            return 2;
-        case POWER:
-            return 3;
-        default:
-            return 0;
-    }
+    if (oper == O_BRACKET || oper == C_BRACKET)
+        return 4;
+    if (oper == SUM || oper == SUBSTRACT)
+        return 1;
+    if (oper == MULTIPLY || oper == DIVISION || oper == SIN || oper == COS || oper == LOG || oper == SQRT)
+        return 2;
+    if (oper == POWER)
+        return 3;
+    return 0;
 }
 
 char *get_RPN_from_str()
@@ -128,20 +143,24 @@ char *get_RPN_from_str()
 
             if (oper != C_BRACKET)
             {
-                if (stake.length == 0)
+                if (stake.length== 0)
                     push_to_stack(&stake, oper);
                 else
                 {
-                    stack_type previous = *get_head(&stake);
+                    int previous = (int) *get_head(&stake);
 
-                    if ((priority(previous) >= priority(oper)) && (previous != O_BRACKET))
+                    if (priority(previous) >= priority((int)oper))
+                    {
                         print_operations(previous, str_rpn, &stake);
-                    push_to_stack(&stake, oper);
+                        push_to_stack(&stake, (int)oper);
+                    }
+                    else
+                        push_to_stack(&stake, (int)oper);
                 }
             }
             else
             {
-                while (*get_head(&stake) != O_BRACKET && stake.length >= 0)
+                while (get_head(&stake) != O_BRACKET && stake.length >= 0)
                     print_operations(*get_head(&stake), str_rpn, &stake);
                 pop_from_stack(&stake);
             }
