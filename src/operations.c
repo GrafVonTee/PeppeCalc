@@ -9,13 +9,13 @@
 #define eq(str, op) (strcmp(str, op) == 0)
 
 #ifdef STACK_TYPE_IS_LONG_DOUBLE
-    #define strtost(op, ptr) strtod(op, ptr)
-    #define sin(x) sinl(x)
-    #define cos(x) cosl(x)
-    #define log(x) logl(x)
-    #define sqrt(x) sqrtl(x)
+#define strtost(op, ptr) strtod(op, ptr)
+#define sin(x) sinl(x)
+#define cos(x) cosl(x)
+#define log(x) logl(x)
+#define sqrt(x) sqrtl(x)
 #elif STACK_TYPE_IS_INT
-    #define strtost(op, str) strtol(op, ptr)
+#define strtost(op, str) strtol(op, ptr)
 #endif
 
 OPERATIONS get_operation_from_string(char *str) {
