@@ -16,6 +16,7 @@ add_executable(Calc
         src/Headers/get_str.h
         "src/Search/constants_of_functions.c"
         src/Headers/constants_of_functions.h
-        src/Search/queue.c src/Headers/queue.h)
+        src/Search/queue.c src/Headers/queue.h
+        )
 
 target_link_libraries(Calc m)
